@@ -30,15 +30,9 @@ jobs:
           working-directory: ./__tests__/example-crate
       - uses: nick-invision/assert-action@v1
         with:
-          expected: |
-            80.00
+          expected: "80.00"
           actual: ${{ steps.doc-cov.outputs.documented }}
       - uses: nick-invision/assert-action@v1
         with:
-          expected: |
-            20.00
+          expected: "20.00"
           actual: ${{ steps.doc-cov.outputs.examples }}
-      - uses: nick-invision/assert-action@v1
-        with:
-          expected: {"src/foo.rs":{"total":2,"with_docs":2,"total_examples":2,"with_examples":0},"src/lib.rs":{"total":3,"with_docs":2,"total_examples":3,"with_examples":1}}
-          actual: ${{ steps.doc-cov.outputs.json }}
