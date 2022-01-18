@@ -24,6 +24,27 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
           toolchain: nightly
-      - uses: ./
+      - id: doc-cov
+        uses: ./
         with:
           working-directory: ./__tests__/example-crate
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: 80
+          actual: ${{ steps.doc-cov.outputs.documented }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: 20
+          actual: ${{ steps.doc-cov.outputs.examples }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: {"src/foo.rs":{"total":2,"with_docs":2,"total_examples":2,"with_examples":0},"src/lib.rs":{"total":3,"with_docs":2,"total_examples":3,"with_examples":1}}
+          actual: ${{ steps.doc-cov.outputs.json }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: |
+            | File       | Documented | Percentage | Examples | Percentage |
+            | ---------- | ---------- | ---------- | -------- | ---------- |
+            | src/lib.rs | 2          | 66.67%     | 1        | 33.33%     |
+            | **Total**  | 2          | 66.67%     | 1        | 33.33%     | 
+          actual: ${{ steps.doc-cov.outputs.table }}
