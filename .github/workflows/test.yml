@@ -30,11 +30,13 @@ jobs:
           working-directory: ./__tests__/example-crate
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "80.00"
+          expected: |
+            80.00
           actual: ${{ steps.doc-cov.outputs.documented }}
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "20.00"
+          expected: |
+            20.00
           actual: ${{ steps.doc-cov.outputs.examples }}
       - uses: nick-invision/assert-action@v1
         with:
