@@ -58,9 +58,9 @@ jobs:
       - uses: nick-invision/assert-action@v1
         with:
           expected: |
-            | File       | Documented | Percentage      | Examples | Percentage   |
-            | ---------- | ---------- | --------------- | -------- | ------------ |
-            | src/foo.rs | 2          | 100% (+0%)      | 0        | 0% (+0%)     |
-            | src/lib.rs | 3          | 75% (+8.33%)    | 1        | 25% (-8.33%) |
-            | **Total**  | 4          | 83.33% (+3.33%) | 1        | 20% (-3.33%) |
+            | File       | Documented | Percentage      | Examples | Percentage      |
+            | ---------- | ---------- | --------------- | -------- | --------------- |
+            | src/foo.rs | 2          | 100% (+0%)      | 0        | 0% (+0%)        |
+            | src/lib.rs | 3          | 75% (+8.33%)    | 1        | 25% (-8.33%)    |
+            | **Total**  | 5          | 83.33% (+3.33%) | 1        | 16.67% (-3.33%) |
           actual: ${{ steps.diff-doc-cov.outputs.table }}
