@@ -23,8 +23,13 @@ async function run(): Promise<void> {
       previous = new CoverageData(report)
     }
 
+    //eslint-disable-next-line no-console
+    console.log('previous', previous)
+
     const cargoOutput = await executeRustdoc(useCross, workingDirectory)
     const coverageData = new CoverageData(cargoOutput, previous)
+    //eslint-disable-next-line no-console
+    console.log('coverageData', coverageData)
 
     const numberFormatter = '0.[00]%'
     const diffFormatter = '+0.[00]%'
