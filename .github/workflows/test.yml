@@ -57,6 +57,14 @@ jobs:
           working-directory: ./__tests__/example-crate
       - uses: nick-invision/assert-action@v1
         with:
+          expected: "+3.33%"
+          actual: ${{ steps.diff-doc-cov.outputs.diff-documented }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: "-3.33%"
+          actual: ${{ steps.diff-doc-cov.outputs.diff-examples }}
+      - uses: nick-invision/assert-action@v1
+        with:
           expected: |
             | File       | Documented | Percentage      | Examples | Percentage      |
             | ---------- | ---------- | --------------- | -------- | --------------- |
