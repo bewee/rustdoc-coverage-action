@@ -26,10 +26,12 @@
   "dependencies": {
     "@actions-rs/core": "^0.1.6",
     "@actions/core": "^1.6.0",
-    "markdown-table": "^3.0.2"
+    "markdown-table": "^3.0.2",
+    "numeral": "^2.0.6"
   },
   "devDependencies": {
     "@types/node": "^16.10.5",
+    "@types/numeral": "^2.0.2",
     "@typescript-eslint/parser": "^5.9.1",
     "@vercel/ncc": "^0.31.1",
     "eslint": "^7.32.0",

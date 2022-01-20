@@ -9,11 +9,23 @@ inputs:
   working-directory:
     description: Select a custom working directory
     required: false
+  store-report:
+    description: 'Whether to store the coverage report in rustdoc-coverage-report.json'
+    default: true
+    required: false
+  calculate-diff:
+    description: 'If a rustdoc-coverage-report.json exists: Whether to calculate the coverage diff to it'
+    default: true
+    required: false
 outputs:
   documented:
     description: 'The overall percentage of documented code'
+  diff-documented:
+    description: 'Difference in the overall percentage of documented code if a rustdoc-coverage-report.json exists and calculate-diff is enabled, otherwise zero'
   examples:
     description: 'The overall percentage of code with examples'
+  diff-examples:
+    description: 'Difference in the overall percentage of code with examples if a rustdoc-coverage-report.json exists and calculate-diff is enabled, otherwise zero'
   table:
     description: 'Tabular rustdoc coverage summary'
   json:
