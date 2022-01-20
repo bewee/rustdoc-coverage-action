@@ -49,3 +49,26 @@ jobs:
             | src/lib.rs | 2          | 66.67%     | 1        | 33.33%     |
             | **Total**  | 4          | 80%        | 1        | 20%        |
           actual: ${{ steps.doc-cov.outputs.table }}
+      - name: Edit example-crate
+        run: printf "/// A test struct\nstruct Bag;" >> ./__tests__/example-crate/src/foo.rs
+      - id: doc-cov
+        uses: ./
+        with:
+          working-directory: ./__tests__/example-crate
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: "+3.33%"
+          actual: ${{ steps.doc-cov.outputs.diff-documented }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: "-3.33%"
+          actual: ${{ steps.doc-cov.outputs.diff-examples }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: |
+            | File       | Documented | Percentage      | Examples | Percentage   |
+            | ---------- | ---------- | --------------- | -------- | ------------ |
+            | src/foo.rs | 2          | 100% (+0%)      | 0        | 0% (+0%)     |
+            | src/lib.rs | 3          | 75% (+8.33%)    | 1        | 25% (-8.33%) |
+            | **Total**  | 4          | 83.33% (+3.33%) | 1        | 20% (-3.33%) |
+          actual: ${{ steps.doc-cov.outputs.table }}
