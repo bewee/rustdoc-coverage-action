@@ -177,12 +177,8 @@ function run() {
                 const report = (0, fs_1.readFileSync)(coverageReportFile).toString();
                 previous = new coverage_data_1.CoverageData(report);
             }
-            //eslint-disable-next-line no-console
-            console.log('previous', previous);
             const cargoOutput = yield executeRustdoc(useCross, workingDirectory);
             const coverageData = new coverage_data_1.CoverageData(cargoOutput, previous);
-            //eslint-disable-next-line no-console
-            console.log('coverageData', coverageData);
             const numberFormatter = '0.[00]%';
             const diffFormatter = '+0.[00]%';
             core.setOutput('documented', (0, numeral_1.default)(coverageData.percentageDocs).format(numberFormatter));

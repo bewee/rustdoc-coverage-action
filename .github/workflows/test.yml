@@ -50,7 +50,7 @@ jobs:
             | **Total**  | 4          | 80%        | 1        | 20%        |
           actual: ${{ steps.doc-cov.outputs.table }}
       - name: Edit example-crate
-        run: printf "/// A test struct\nstruct Bag;" >> ./__tests__/example-crate/src/lib.rs
+        run: printf "/// A test struct\npub struct Bag;" >> ./__tests__/example-crate/src/lib.rs
       - id: diff-doc-cov
         uses: ./
         with:
