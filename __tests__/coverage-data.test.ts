@@ -39,14 +39,16 @@ test('calculate percentage docs', async () => {
 test('calculate percentage examples', async () => {
   const coverageData = new CoverageData(cargoOutput)
   const expectedPercentageExamples = 0.2
-  expect(coverageData.percentageExamples).toBeCloseTo(expectedPercentageExamples)
+  expect(coverageData.percentageExamples).toBeCloseTo(
+    expectedPercentageExamples
+  )
 })
 
 test('build markdown table', async () => {
   const coverageData = new CoverageData(cargoOutput)
   const expectedTable = [
     ['File', 'Documented', 'Percentage', 'Examples', 'Percentage'],
-    ['src/foo.rs', '2', '100%', '0', '0% (+0%)'],
+    ['src/foo.rs', '2', '100%', '0', '0%'],
     ['src/lib.rs', '2', '66.67%', '1', '33.33%'],
     ['**Total**', '4', '80%', '1', '20%']
   ]
@@ -56,22 +58,31 @@ test('build markdown table', async () => {
 test('calculate diff data', async () => {
   const previousData = new CoverageData(previousCargoOutput)
   const coverageData = new CoverageData(cargoOutput, previousData)
-  const expectedDiffData = {total: 1, total_examples: 1, with_docs: 2, with_examples: 0}
-  expect(coverageData.diffData('src/foo.rs')).toEqual(expectedDiffData)
+  const expectedDiffData = {docs: -0.3333, examples: 0.0833}
+  expect(coverageData.diffData('src/lib.rs').docs).toBeCloseTo(
+    expectedDiffData.docs
+  )
+  expect(coverageData.diffData('src/lib.rs').examples).toBeCloseTo(
+    expectedDiffData.examples
+  )
 })
 
 test('calculate diff percentage docs', async () => {
   const previousData = new CoverageData(previousCargoOutput)
   const coverageData = new CoverageData(cargoOutput, previousData)
   const expectedDiffPercentageDocs = 0.1333
-  expect(coverageData.diffPercentageDocs).toBeCloseTo(expectedDiffPercentageDocs)
+  expect(coverageData.diffPercentageDocs).toBeCloseTo(
+    expectedDiffPercentageDocs
+  )
 })
 
 test('calculate diff percentage examples', async () => {
   const previousData = new CoverageData(previousCargoOutput)
   const coverageData = new CoverageData(cargoOutput, previousData)
   const expectedDiffPercentageExamples = 0
-  expect(coverageData.diffPercentageExamples).toBeCloseTo(expectedDiffPercentageExamples)
+  expect(coverageData.diffPercentageExamples).toBeCloseTo(
+    expectedDiffPercentageExamples
+  )
 })
 
 test('build markdown table with diff', async () => {
@@ -79,9 +90,9 @@ test('build markdown table with diff', async () => {
   const coverageData = new CoverageData(cargoOutput, previousData)
   const expectedTable = [
     ['File', 'Documented', 'Percentage', 'Examples', 'Percentage'],
-    ['src/foo.rs', '2', '100%', '0', '0%'],
-    ['src/lib.rs', '2', '66.67%', '1', '33.33%'],
-    ['**Total**', '4', '80%', '1', '20%']
+    ['src/foo.rs', '2', '100% (+100%)', '0', '0% (+0%)'],
+    ['src/lib.rs', '2', '66.67% (-33.33%)', '1', '33.33% (+8.33%)'],
+    ['**Total**', '4', '80% (+13.33%)', '1', '20% (+0%)']
   ]
   expect(coverageData.asTable()).toEqual(expectedTable)
 })
