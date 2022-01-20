@@ -4,6 +4,7 @@ import {existsSync, readFileSync, writeFileSync} from 'fs'
 import {CoverageData} from './coverage-data'
 import {join} from 'path'
 import {markdownTable} from 'markdown-table'
+import numeral from 'numeral'
 
 async function run(): Promise<void> {
   try {
@@ -25,15 +26,24 @@ async function run(): Promise<void> {
     const cargoOutput = await executeRustdoc(useCross, workingDirectory)
     const coverageData = new CoverageData(cargoOutput, previous)
 
-    core.setOutput('documented', coverageData.percentageDocs.toFixed(2))
+    const numberFormatter = '0.[00]%'
+    const diffFormatter = '+0.[00]%'
+
+    core.setOutput(
+      'documented',
+      numeral(coverageData.percentageDocs).format(numberFormatter)
+    )
     core.setOutput(
       'diff-documented',
-      coverageData.diffPercentageDocs.toFixed(2)
+      numeral(coverageData.diffPercentageDocs).format(diffFormatter)
     )
-    core.setOutput('examples', coverageData.percentageExamples.toFixed(2))
+    core.setOutput(
+      'examples',
+      numeral(coverageData.percentageExamples).format(numberFormatter)
+    )
     core.setOutput(
       'diff-examples',
-      coverageData.diffPercentageExamples.toFixed(2)
+      numeral(coverageData.diffPercentageExamples).format(diffFormatter)
     )
     core.setOutput('json', cargoOutput)
     core.setOutput('table', markdownTable(coverageData.asTable()))

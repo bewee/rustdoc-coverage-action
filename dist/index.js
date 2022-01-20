@@ -153,6 +153,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const core_1 = __nccwpck_require__(822);
@@ -160,6 +163,7 @@ const fs_1 = __nccwpck_require__(5747);
 const coverage_data_1 = __nccwpck_require__(1174);
 const path_1 = __nccwpck_require__(5622);
 const markdown_table_1 = __nccwpck_require__(1062);
+const numeral_1 = __importDefault(__nccwpck_require__(4206));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -175,10 +179,12 @@ function run() {
             }
             const cargoOutput = yield executeRustdoc(useCross, workingDirectory);
             const coverageData = new coverage_data_1.CoverageData(cargoOutput, previous);
-            core.setOutput('documented', coverageData.percentageDocs.toFixed(2));
-            core.setOutput('diff-documented', coverageData.diffPercentageDocs.toFixed(2));
-            core.setOutput('examples', coverageData.percentageExamples.toFixed(2));
-            core.setOutput('diff-examples', coverageData.diffPercentageExamples.toFixed(2));
+            const numberFormatter = '0.[00]%';
+            const diffFormatter = '+0.[00]%';
+            core.setOutput('documented', (0, numeral_1.default)(coverageData.percentageDocs).format(numberFormatter));
+            core.setOutput('diff-documented', (0, numeral_1.default)(coverageData.diffPercentageDocs).format(diffFormatter));
+            core.setOutput('examples', (0, numeral_1.default)(coverageData.percentageExamples).format(numberFormatter));
+            core.setOutput('diff-examples', (0, numeral_1.default)(coverageData.diffPercentageExamples).format(diffFormatter));
             core.setOutput('json', cargoOutput);
             core.setOutput('table', (0, markdown_table_1.markdownTable)(coverageData.asTable()));
             if (storeReport) {
