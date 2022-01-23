@@ -17,6 +17,14 @@ inputs:
     description: 'If a rustdoc-coverage-report.json exists: Whether to calculate the coverage diff to it'
     default: true
     required: false
+  percentage-format:
+    description: Format string used for percentages
+    default: 0.[00]%
+    required: true
+  diff-percentage-format:
+    description: Format string used for diff percentages
+    default: +0.[00]%
+    required: true
 outputs:
   documented:
     description: 'The overall percentage of documented code'

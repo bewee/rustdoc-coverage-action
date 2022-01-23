@@ -55,6 +55,7 @@ jobs:
         uses: ./
         with:
           working-directory: ./__tests__/example-crate
+          store-report: false
       - uses: nick-invision/assert-action@v1
         with:
           expected: "+3.33%"
@@ -72,3 +73,26 @@ jobs:
             | src/lib.rs | 3          | 75% (+8.33%)    | 1        | 25% (-8.33%)    |
             | **Total**  | 5          | 83.33% (+3.33%) | 1        | 16.67% (-3.33%) |
           actual: ${{ steps.diff-doc-cov.outputs.table }}
+      - id: formatted-doc-cov
+        uses: ./
+        with:
+          percentage-format: '0%'
+          diff-percentage-format: '0.000'
+          working-directory: ./__tests__/example-crate
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: "83%"
+          actual: ${{ steps.formatted-doc-cov.outputs.documented }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: "0.033"
+          actual: ${{ steps.formatted-doc-cov.outputs.diff-documented }}
+      - uses: nick-invision/assert-action@v1
+        with:
+          expected: |
+            | File       | Documented | Percentage   | Examples | Percentage   |
+            | ---------- | ---------- | ------------ | -------- | ------------ |
+            | src/foo.rs | 2          | 100% (0.000) | 0        | 0% (0.000)   |
+            | src/lib.rs | 3          | 75% (0.083)  | 1        | 25% (-0.083) |
+            | **Total**  | 5          | 83% (0.033)  | 1        | 17% (-0.033) |
+          actual: ${{ steps.formatted-doc-cov.outputs.table }}

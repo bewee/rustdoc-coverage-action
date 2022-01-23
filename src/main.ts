@@ -16,6 +16,10 @@ async function run(): Promise<void> {
       workingDirectory,
       'rustdoc-coverage-report.json'
     )
+    const numberFormatter = core.getInput('percentage-format', {required: true})
+    const diffFormatter = core.getInput('diff-percentage-format', {
+      required: true
+    })
 
     let previous: CoverageData | undefined = undefined
     if (calculateDiff && existsSync(coverageReportFile)) {
@@ -26,8 +30,8 @@ async function run(): Promise<void> {
     const cargoOutput = await executeRustdoc(useCross, workingDirectory)
     const coverageData = new CoverageData(cargoOutput, previous)
 
-    const numberFormatter = '0.[00]%'
-    const diffFormatter = '+0.[00]%'
+    coverageData.numberFormatter = numberFormatter
+    coverageData.diffFormatter = diffFormatter
 
     core.setOutput(
       'documented',

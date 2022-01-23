@@ -172,6 +172,10 @@ function run() {
             const storeReport = core_1.input.getInputBool('store-report');
             const calculateDiff = core_1.input.getInputBool('calculate-diff');
             const coverageReportFile = (0, path_1.join)(workingDirectory, 'rustdoc-coverage-report.json');
+            const numberFormatter = core.getInput('percentage-format', { required: true });
+            const diffFormatter = core.getInput('diff-percentage-format', {
+                required: true
+            });
             let previous = undefined;
             if (calculateDiff && (0, fs_1.existsSync)(coverageReportFile)) {
                 const report = (0, fs_1.readFileSync)(coverageReportFile).toString();
@@ -179,8 +183,8 @@ function run() {
             }
             const cargoOutput = yield executeRustdoc(useCross, workingDirectory);
             const coverageData = new coverage_data_1.CoverageData(cargoOutput, previous);
-            const numberFormatter = '0.[00]%';
-            const diffFormatter = '+0.[00]%';
+            coverageData.numberFormatter = numberFormatter;
+            coverageData.diffFormatter = diffFormatter;
             core.setOutput('documented', (0, numeral_1.default)(coverageData.percentageDocs).format(numberFormatter));
             core.setOutput('diff-documented', (0, numeral_1.default)(coverageData.diffPercentageDocs).format(diffFormatter));
             core.setOutput('examples', (0, numeral_1.default)(coverageData.percentageExamples).format(numberFormatter));
