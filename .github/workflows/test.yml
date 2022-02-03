@@ -50,7 +50,11 @@ jobs:
             | **Total**  | 4          | 80%        | 1        | 20%        |
           actual: ${{ steps.doc-cov.outputs.table }}
       - name: Edit example-crate
-        run: printf "/// A test struct\npub struct Bag;" >> ./__tests__/example-crate/src/lib.rs
+        run: |
+          printf "/// A test struct\npub struct Bag;" >> ./__tests__/example-crate/src/lib.rs;
+          new_lib=$(cat ./__tests__/example-crate/src/lib.rs | awk 'NR==3 {print "pub mod bar;"} 2');
+          printf "$new_lib" > __tests__/example-crate/src/lib.rs;
+          printf "//! A new module\npub struct Egg;" >> ./__tests__/example-crate/src/bar.rs
       - id: diff-doc-cov
         uses: ./
         with:
@@ -58,20 +62,21 @@ jobs:
           store-report: false
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "+3.33%"
+          expected: "-5%"
           actual: ${{ steps.diff-doc-cov.outputs.diff-documented }}
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "-3.33%"
+          expected: "-7.5%"
           actual: ${{ steps.diff-doc-cov.outputs.diff-examples }}
       - uses: nick-invision/assert-action@v1
         with:
           expected: |
-            | File       | Documented | Percentage      | Examples | Percentage      |
-            | ---------- | ---------- | --------------- | -------- | --------------- |
-            | src/foo.rs | 2          | 100% (+0%)      | 0        | 0% (+0%)        |
-            | src/lib.rs | 3          | 75% (+8.33%)    | 1        | 25% (-8.33%)    |
-            | **Total**  | 5          | 83.33% (+3.33%) | 1        | 16.67% (-3.33%) |
+            | File       | Documented | Percentage   | Examples | Percentage    |
+            | ---------- | ---------- | ------------ | -------- | ------------- |
+            | src/bar.rs | 1          | 50% (+50%)   | 0        | 0% (+0%)      |
+            | src/foo.rs | 2          | 100% (+0%)   | 0        | 0% (+0%)      |
+            | src/lib.rs | 3          | 75% (+8.33%) | 1        | 25% (-8.33%)  |
+            | **Total**  | 6          | 75% (-5%)    | 1        | 12.5% (-7.5%) |
           actual: ${{ steps.diff-doc-cov.outputs.table }}
       - id: formatted-doc-cov
         uses: ./
@@ -81,18 +86,19 @@ jobs:
           working-directory: ./__tests__/example-crate
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "83%"
+          expected: "75%"
           actual: ${{ steps.formatted-doc-cov.outputs.documented }}
       - uses: nick-invision/assert-action@v1
         with:
-          expected: "0.033"
+          expected: "-0.050"
           actual: ${{ steps.formatted-doc-cov.outputs.diff-documented }}
       - uses: nick-invision/assert-action@v1
         with:
           expected: |
             | File       | Documented | Percentage   | Examples | Percentage   |
             | ---------- | ---------- | ------------ | -------- | ------------ |
+            | src/bar.rs | 1          | 50% (0.500)  | 0        | 0% (0.000)   |
             | src/foo.rs | 2          | 100% (0.000) | 0        | 0% (0.000)   |
             | src/lib.rs | 3          | 75% (0.083)  | 1        | 25% (-0.083) |
-            | **Total**  | 5          | 83% (0.033)  | 1        | 17% (-0.033) |
+            | **Total**  | 6          | 75% (-0.050) | 1        | 13% (-0.075) |
           actual: ${{ steps.formatted-doc-cov.outputs.table }}

@@ -80,7 +80,13 @@ class CoverageData {
             return new CoverageDiff(0, 0);
         }
         const entry = this.data[key];
-        const previousEntry = this.previous.data[key];
+        const previousEntry = this.previous.data[key] ||
+            new CoverageEntry({
+                total: 1,
+                with_docs: 0,
+                total_examples: 1,
+                with_examples: 0
+            });
         return new CoverageDiff(entry.percentage_docs - previousEntry.percentage_docs, entry.percentage_examples - previousEntry.percentage_examples);
     }
     asTable() {
