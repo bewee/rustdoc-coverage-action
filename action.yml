@@ -1,6 +1,9 @@
 name: 'Rustdoc coverage'
 description: 'Generate rustdoc coverage report'
 author: 'bewee'
+branding:
+  icon: 'book-open'
+  color: 'orange'
 inputs:
   use-cross:
     description: Use cross instead of cargo
